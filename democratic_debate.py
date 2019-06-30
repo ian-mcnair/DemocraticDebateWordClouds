@@ -9,7 +9,7 @@ from requests import get
 url1 = 'https://time.com/5615358/2020-first-democratic-debate-transcript/'
 url2 = 'https://time.com/5616518/2020-democratic-debate-night-2-transcript/'
 response1 = get(url1)
-response2 = get((url2))
+response2 = get(url2)
 
 # Parse HTML
 from bs4 import BeautifulSoup
@@ -25,10 +25,6 @@ for p in html1.select('p'):
 for p in html2.select('p'):
     transcript2.append(p.text)
 
-transcript1[0:5]
-
-transcript2[0:5]
-
 
 # List of all candidates. Needed to do this manually
 candidates1 = ['Booker', 'Castro', 'De Blasio', 
@@ -43,11 +39,21 @@ candidates2 = ['Biden', 'Sanders', 'Harris', 'Buttigieg',
                'Swalwell','Holt', 'Guthrie',
                'DIAZ-BALART', 'Todd', 'Maddow']
 
+candidates3 = ['Booker', 'Castro', 'De Blasio', 
+              'Delaney', 'Gabbard', 'Inslee', 
+              'Klobuchar', "O’Rourke", "Ryan", 
+              "Warren",'Biden', 'Sanders', 'Harris', 
+              'Buttigieg','Yang', 'Gillibrand', 
+              'Williamson', 'Hickenlooper', 'Bennet',
+              'Swalwell']
+
 # Capitalize the Candidates
 for i in range(len(candidates1)):
     candidates1[i] = candidates1[i].upper()
 for i in range(len(candidates2)):
     candidates2[i] = candidates2[i].upper()
+for i in range(len(candidates3)):
+    candidates3[i] = candidates3[i].upper()
     
 # Make a dictionary for storing what each candidate said
 candidate_words1 = {}
@@ -98,11 +104,7 @@ cand_vals2 = {}
 for i in candidate_words2:
     cand_vals2[i] = len(candidate_words2[i])
 
-
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 
 df1 = pd.DataFrame(list(zip(list(cand_vals1.keys()),
                            list(cand_vals1.values()),
@@ -115,40 +117,13 @@ df2 = pd.DataFrame(list(zip(list(cand_vals2.keys()),
                 columns = ['candidates', 'length', 'speech']
                 )
 
-#########################
-# Fix this part!
 df = df1.append(df2)
 
-df =
-#########################
+df = df.loc[df.candidates.isin(candidates3)].reset_index(drop = True)
 
-df.to_excel('candidates1.xlsx', index = False)
-
-pos = range(len(df.candidates))
-
-test = df.sort_values('length', ascending = False)
-
-sns.set_style("darkgrid")
-sns.barplot(x = test.length,
-            y = test.candidates)
-plt.title('Candidate Speech Length')
-plt.xlabel('Number of Words')
-plt.ylabel('Candidate')
-plt.show()
+df.to_excel('candidates.xlsx', index = False)
 
 
-
-
-
-
-
-
-# After Removing the stop words
-import nltk
-nltk.download('stopwords')
-from nltk.corpus import stopwords
-stopwords.words('english')
-print(stopwords.words()[620:680])
 
 
 
